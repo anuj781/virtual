@@ -1,0 +1,23 @@
+import { v2 as cloudinary } from 'cloudinary'
+import fs from "fs"
+
+const uploadOnCloudinary = async (filePath)=>{
+    cloudinary.config({ 
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+  api_key:process.env.CLOUDINARY_API_KEY, 
+  api_secret:process.env.CLOUDINARY_API_SECRET
+});
+try {
+      // Upload the image
+      const result = await cloudinary.uploader.upload(filePath);
+      console.log(result);
+      fs.unlinkSync(filePath)
+      return result.secure_url
+    } catch (error) {
+      console.error(error);
+       fs.unlinkSync(filePath)
+       return res.status(500).json({message:"cloudinary error"})
+    }
+}
+
+export default uploadOnCloudinary
